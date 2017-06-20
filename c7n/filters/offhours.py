@@ -39,8 +39,9 @@ different policy, they support the same configuration options:
  - **weekend-only**: default false, whether to turn the resource off only on
    the weekend
  - **default_tz**: which timezone to utilize when evaluating time **(REQUIRED)**
- - **tag**: default maid_offhours, which resource tag key to look for the
-   resource's schedule.
+ - **tag**: which resource tag name to use for per-resource configuration
+   (schedule and timezone overrides and opt-in/opt-out); default is
+   ``maid_offhours``.
  - **opt-out**: Determines the behavior for resources which do not have a tag
    matching the one specified for **tag**. Values can be either ``false`` (the
    default) where the policy operates on an opt-in basis and resources must have
@@ -72,7 +73,7 @@ Tag Based Configuration
 Resources can use a special tag to override the default configuration on a
 per-resource basis. Note that the name of the tag is configurable via the
 ``tag`` option in the policy; the examples below use the default tag name,
-``custodian_downtime``.
+``maid_offhours``.
 
 The value of the tag must be one of the following:
 
