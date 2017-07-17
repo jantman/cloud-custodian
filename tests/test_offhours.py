@@ -141,18 +141,22 @@ class OffHoursFilterTest(BaseTest):
         # Given the addition of opt out behavior, verify if its
         # not configured that we don't touch an instance that
         # has no downtime tag
+        i = instance(Tags=[])
+
         t = datetime.datetime(
             year=2015, month=12, day=1, hour=19, minute=5,
             tzinfo=zoneinfo.gettz('America/New_York'))
-        i = instance(Tags=[])
         f = OffHour({})
 
         with mock_datetime_now(t, datetime):
             self.assertEqual(f(i), False)
-            t = datetime.datetime(
-                year=2015, month=12, day=1, hour=7, minute=5,
-                tzinfo=zoneinfo.gettz('America/New_York'))
-            f = OnHour({})
+
+        t = datetime.datetime(
+            year=2015, month=12, day=1, hour=7, minute=5,
+            tzinfo=zoneinfo.gettz('America/New_York'))
+        f = OnHour({})
+
+        with mock_datetime_now(t, datetime):
             self.assertEqual(f(i), False)
 
     def xtest_time_match_stops_after_skew(self):
