@@ -195,7 +195,7 @@ in tag values, such as `ElasticBeanstalk <http://docs.aws.amazon.com/elasticbean
 stalk/latest/dg/using-features.tagging.html>`_ and `EFS <http://docs.aws.amazon.
 com/efs/latest/ug/API_Tag.html>`_. In particular, these services do not allow
 parenthesis, square brackets, commas, or semicolons, or empty tag values. This
-proves to be problematic with the tag-based schedule configuration describe
+proves to be problematic with the tag-based schedule configuration described
 above. The best current workaround is to define a separate policy with a unique
 ``tag`` name for each unique schedule that you want to use, and then tag
 resources with that tag name and a value of ``on``. Note that this can only be
