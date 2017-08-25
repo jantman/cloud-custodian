@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 class MailerTester(object):
 
-    def __init__(self, msg_file, config, msg_plain=False):
+    def __init__(self, msg_file, config, msg_plain=False, json_dump_file=None):
         if not os.path.exists(msg_file):
             raise RuntimeError("File does not exist: %s" % msg_file)
         logger.debug('Reading message from: %s', msg_file)
@@ -41,7 +41,9 @@ class MailerTester(object):
         else:
             logger.debug('base64-decoding and zlib decompressing message')
             raw = zlib.decompress(base64.b64decode(raw))
-            logger.debug('Raw JSON string: %s', raw)
+            if json_dump_file is not None:
+                with open(json_dump_file, 'w') as fh:
+                    fh.write(raw)
         self.data = json.loads(raw)
         logger.debug('Loaded message JSON')
         self.config = config
@@ -83,6 +85,10 @@ def setup_parser():
                         help='Expect MESSAGE_FILE to be a plain string, '
                              'rather than the base64-encoded, gzipped SQS '
                              'message format')
+    parser.add_argument('-j', '--json-dump-file', dest='json_dump_file',
+                        type=str, action='store', default=None,
+                        help='If dump JSON of MESSAGE_FILE to this path; '
+                             'useful to base64-decode and gunzip a message')
     parser.add_argument('MESSAGE_FILE', type=str,
                         help='Path to SQS message dump/content file')
     return parser
@@ -108,7 +114,10 @@ def main():
     jsonschema.validate(config, CONFIG_SCHEMA)
     setup_defaults(config)
 
-    tester = MailerTester(options.MESSAGE_FILE, config, msg_plain=options.plain)
+    tester = MailerTester(
+        options.MESSAGE_FILE, config, msg_plain=options.plain,
+        json_dump_file=options.json_dump_file
+    )
     tester.run(options.dry_run, options.print_only)
 
 
