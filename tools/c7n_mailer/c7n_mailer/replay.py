@@ -55,7 +55,7 @@ class MailerTester(object):
             mime = emd.get_mimetext_message(
                 self.data, self.data['resources'], ['foo@example.com']
             )
-            print('Send mail with subject: "%s"' % mime['Subject'])
+            logger.info('Send mail with subject: "%s"', mime['Subject'])
             print(mime.get_payload())
             return
         if dry_run:
