@@ -20,10 +20,9 @@ import json
 import jsonschema
 import yaml
 
-from c7n import utils
 from c7n_mailer.utils import setup_defaults
 from c7n_mailer.cli import CONFIG_SCHEMA
-from .sqs_message_processor import SqsMessageProcessor
+from .email_delivery import EmailDelivery
 
 logger = logging.getLogger(__name__)
 
@@ -42,56 +41,32 @@ class MailerTester(object):
         else:
             logger.debug('base64-decoding and zlib decompressing message')
             raw = zlib.decompress(base64.b64decode(raw))
+            logger.debug('Raw JSON string: %s', raw)
         self.data = json.loads(raw)
         logger.debug('Loaded message JSON')
         self.config = config
         self.session = boto3.Session()
 
     def run(self, dry_run=False, print_only=False):
-        msg = {
-            'Body': base64.b64encode(zlib.compress(utils.dumps(self.data))),
-            'MessageId': 'replayed-message'
-        }
-        self.show_to(msg)
+        emd = EmailDelivery(self.config, self.session, None)
+        addrs_to_msgs = emd.get_to_addrs_email_messages_map(self.data)
+        logger.info('Would send email to: %s', addrs_to_msgs.keys())
         if print_only:
-            self.do_print()
+            mime = emd.get_mimetext_message(
+                self.data, self.data['resources'], ['foo@example.com']
+            )
+            print('Send mail with subject: "%s"' % mime['Subject'])
+            print(mime.get_payload())
             return
         if dry_run:
-            self.do_dry_run(msg)
+            for to_addrs, mimetext_msg in addrs_to_msgs.items():
+                print('-> SEND MESSAGE TO: %s' % to_addrs)
+                print(mimetext_msg)
             return
-        smp = SqsMessageProcessor(self.config, self.session, None, logger)
-        smp.process_sqs_messsage(msg)
-
-    def do_dry_run(self, msg):
-        def sre(RawMessage):
-            logger.info("SEND RAW MESSAGE:")
-            print(RawMessage['Data'])
-
-        if self.config.get('smtp_server'):
-            del self.config['smtp_server']
-        smp = SqsMessageProcessor(self.config, self.session, None, logger)
-        smp.aws_ses.send_raw_email = sre
-        smp.process_sqs_messsage(msg)
-
-    def do_print(self):
-        def sce(_, email_to, subject, body):
-            logger.info('Send mail with subject "%s":', subject)
-            print(body)
-            raise SystemExit(0)
-
-        smp = SqsMessageProcessor(self.config, self.session, None, logger)
-        smp.send_c7n_email = sce
-        smp.send_message_to_targets(
-            ['foo@example.com'], self.data, self.data['resources']
-        )
-
-    def show_to(self, msg):
-        def smtt(targets, _, resources):
-            logger.info('Would send email for %s resources to: %s',
-                        len(resources), targets)
-        smp = SqsMessageProcessor(self.config, self.session, None, logger)
-        smp.send_message_to_targets = smtt
-        smp.process_sqs_messsage(msg)
+        # else actually send the message...
+        for to_addrs, mimetext_msg in addrs_to_msgs.items():
+            logger.info('Actually sending mail to: %s', to_addrs)
+            emd.send_c7n_email(self.data, list(to_addrs), mimetext_msg)
 
 
 def setup_parser():
