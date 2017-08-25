@@ -50,7 +50,7 @@ class MailerTester(object):
         self.session = boto3.Session()
 
     def run(self, dry_run=False, print_only=False):
-        emd = EmailDelivery(self.config, self.session, None)
+        emd = EmailDelivery(self.config, self.session, logger)
         addrs_to_msgs = emd.get_to_addrs_email_messages_map(self.data)
         logger.info('Would send email to: %s', addrs_to_msgs.keys())
         if print_only:
