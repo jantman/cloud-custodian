@@ -77,7 +77,7 @@ class EC2(query.QueryResourceManager):
     action_registry = actions
 
     # if we have to do a fallback scenario where tags don't come in describe
-    permissions = ('ec2:DescribeTags',)
+    permissions = ('ec2:DescribeTags', 'ec2:DescribeInstanceAttribute',)
 
     def __init__(self, ctx, data):
         super(EC2, self).__init__(ctx, data)
@@ -300,6 +300,54 @@ class AttachedVolume(ValueFilter):
                     if a['Device'] in self.skip:
                         volumes.remove(v)
         return self.operator(map(self.match, volumes))
+
+
+@filters.register('disableApiTermination')
+class DisableApiTermination(Filter):
+    """EC2 instances with disableApiTermination attribute set
+
+    Filters EC2 instances with disableApiTermination attribute set to true.
+
+    :Example:
+
+    .. code-block:: yaml
+
+        policies:
+          - name: termination-protection-enabled
+            resource: ec2
+            filters:
+              - type: disableApiTermination
+
+    :Example:
+
+    .. code-block:: yaml
+
+        policies:
+          - name: termination-protection-NOT-enabled
+            resource: ec2
+            filters:
+              - not:
+                - type: disableApiTermination
+    """
+
+    schema = type_schema('disableApiTermination')
+
+    def get_permissions(self):
+        return self.manager.get_resource_manager('ec2').get_permissions()
+
+    def is_termination_protection_enabled(self, inst):
+        manager = self.manager.get_resource_manager('ec2')
+        res_id = manager.get_model().id
+        client = utils.local_session(self.manager.session_factory).client('ec2')
+        attr_val = manager.retry(
+            client.describe_instance_attribute,
+            Attribute='disableApiTermination',
+            InstanceId=inst[res_id]
+        )
+        return attr_val['DisableApiTermination']['Value']
+
+    def __call__(self, i):
+        return self.is_termination_protection_enabled(i)
 
 
 class InstanceImageBase(object):
