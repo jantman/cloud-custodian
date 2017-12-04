@@ -83,12 +83,12 @@ class TestDisableApiTermination(BaseTest):
 
     def test_term_prot_enabled(self):
         session_factory = self.replay_flight_data(
-            'test_ec2_disableApiTermination_filter')
+            'test_ec2_termination-protected_filter')
         policy = self.load_policy({
             'name': 'ec2-termination-enabled',
             'resource': 'ec2',
             'filters': [
-                {'type': 'disableApiTermination'}
+                {'type': 'termination-protected'}
             ]},
             session_factory=session_factory)
         resources = policy.run()
@@ -97,13 +97,13 @@ class TestDisableApiTermination(BaseTest):
 
     def test_term_prot_not_enabled(self):
         session_factory = self.replay_flight_data(
-            'test_ec2_disableApiTermination_filter')
+            'test_ec2_termination-protected_filter')
         policy = self.load_policy({
             'name': 'ec2-termination-NOT-enabled',
             'resource': 'ec2',
             'filters': [
                 {'not': [
-                    {'type': 'disableApiTermination'}
+                    {'type': 'termination-protected'}
                 ]}
             ]},
             session_factory=session_factory)

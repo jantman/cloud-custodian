@@ -302,11 +302,11 @@ class AttachedVolume(ValueFilter):
         return self.operator(map(self.match, volumes))
 
 
-@filters.register('disableApiTermination')
+@filters.register('termination-protected')
 class DisableApiTermination(Filter):
-    """EC2 instances with disableApiTermination attribute set
+    """EC2 instances with ``disableApiTermination`` attribute set
 
-    Filters EC2 instances with disableApiTermination attribute set to true.
+    Filters EC2 instances with ``disableApiTermination`` attribute set to true.
 
     :Example:
 
@@ -316,7 +316,7 @@ class DisableApiTermination(Filter):
           - name: termination-protection-enabled
             resource: ec2
             filters:
-              - type: disableApiTermination
+              - type: termination-protected
 
     :Example:
 
@@ -327,10 +327,10 @@ class DisableApiTermination(Filter):
             resource: ec2
             filters:
               - not:
-                - type: disableApiTermination
+                - type: termination-protected
     """
 
-    schema = type_schema('disableApiTermination')
+    schema = type_schema('termination-protected')
 
     def get_permissions(self):
         return self.manager.get_resource_manager('ec2').get_permissions()

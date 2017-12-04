@@ -58,7 +58,7 @@
                                         "Association": {
                                             "PublicIp": "34.213.44.68", 
                                             "PublicDnsName": "ec2-34-213-44-68.us-west-2.compute.amazonaws.com", 
-                                            "IpOwnerId": "860309399526"
+                                            "IpOwnerId": "000000000000"
                                         }
                                     }
                                 ], 
@@ -86,13 +86,13 @@
                                     }
                                 ], 
                                 "Ipv6Addresses": [], 
-                                "OwnerId": "860309399526", 
+                                "OwnerId": "000000000000", 
                                 "PrivateIpAddress": "172.31.30.98", 
                                 "SubnetId": "subnet-01769a76", 
                                 "Association": {
                                     "PublicIp": "34.213.44.68", 
                                     "PublicDnsName": "ec2-34-213-44-68.us-west-2.compute.amazonaws.com", 
-                                    "IpOwnerId": "860309399526"
+                                    "IpOwnerId": "000000000000"
                                 }
                             }
                         ], 
@@ -163,7 +163,7 @@
                         "RootDeviceType": "ebs", 
                         "IamInstanceProfile": {
                             "Id": "AIPAJI4H7TTKZWHCCVMAI", 
-                            "Arn": "arn:aws:iam::860309399526:instance-profile/ecs-host"
+                            "Arn": "arn:aws:iam::000000000000:instance-profile/ecs-host"
                         }, 
                         "RootDeviceName": "/dev/xvda", 
                         "VirtualizationType": "hvm", 
@@ -186,7 +186,7 @@
                 ], 
                 "ReservationId": "r-011d13db0c1f1b7da", 
                 "Groups": [], 
-                "OwnerId": "860309399526"
+                "OwnerId": "000000000000"
             }, 
             {
                 "Instances": [
@@ -265,7 +265,7 @@
                                     }
                                 ], 
                                 "Ipv6Addresses": [], 
-                                "OwnerId": "860309399526", 
+                                "OwnerId": "000000000000", 
                                 "SubnetId": "subnet-10484756", 
                                 "PrivateIpAddress": "172.31.15.43"
                             }
@@ -350,7 +350,7 @@
                 ], 
                 "ReservationId": "r-0e7a032d7214577d7", 
                 "Groups": [], 
-                "OwnerId": "860309399526"
+                "OwnerId": "000000000000"
             }, 
             {
                 "Instances": [
@@ -429,7 +429,7 @@
                                     }
                                 ], 
                                 "Ipv6Addresses": [], 
-                                "OwnerId": "860309399526", 
+                                "OwnerId": "000000000000", 
                                 "SubnetId": "subnet-10484756", 
                                 "PrivateIpAddress": "172.31.6.41"
                             }
@@ -514,7 +514,7 @@
                 ], 
                 "ReservationId": "r-08577caaa71d42a06", 
                 "Groups": [], 
-                "OwnerId": "860309399526"
+                "OwnerId": "000000000000"
             }
         ], 
         "ResponseMetadata": {
