@@ -331,10 +331,10 @@ class DisableApiTermination(Filter):
     """
 
     schema = type_schema('termination-protected')
-    permissions = ['ec2:DescribeInstanceAttribute']
+    permissions = ('ec2:DescribeInstanceAttribute',)
 
     def get_permissions(self):
-        perms = self.permissions
+        perms = list(self.permissions)
         perms.extend(self.manager.get_permissions())
         return perms
 
