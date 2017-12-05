@@ -77,7 +77,7 @@ class EC2(query.QueryResourceManager):
     action_registry = actions
 
     # if we have to do a fallback scenario where tags don't come in describe
-    permissions = ('ec2:DescribeTags', 'ec2:DescribeInstanceAttribute',)
+    permissions = ('ec2:DescribeTags',)
 
     def __init__(self, ctx, data):
         super(EC2, self).__init__(ctx, data)
@@ -331,15 +331,17 @@ class DisableApiTermination(Filter):
     """
 
     schema = type_schema('termination-protected')
+    permissions = ['ec2:DescribeInstanceAttribute']
 
     def get_permissions(self):
-        return self.manager.get_resource_manager('ec2').get_permissions()
+        perms = self.permissions
+        perms.extend(self.manager.get_permissions())
+        return perms
 
     def is_termination_protection_enabled(self, inst):
-        manager = self.manager.get_resource_manager('ec2')
-        res_id = manager.get_model().id
+        res_id = self.manager.get_model().id
         client = utils.local_session(self.manager.session_factory).client('ec2')
-        attr_val = manager.retry(
+        attr_val = self.manager.retry(
             client.describe_instance_attribute,
             Attribute='disableApiTermination',
             InstanceId=inst[res_id]

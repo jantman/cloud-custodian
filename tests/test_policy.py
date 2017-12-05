@@ -86,7 +86,6 @@ class PolicyPermissions(BaseTest):
             perms,
             set(('ec2:DescribeInstances',
                  'ec2:DescribeTags',
-                 'ec2:DescribeInstanceAttribute',
                  'cloudwatch:GetMetricStatistics')))
 
     def xtest_resource_filter_name(self):
