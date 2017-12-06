@@ -228,7 +228,7 @@ class TestEBEnvTagging(EbEnvBaseTest):
                 ],
                 'actions': [
                     {
-                        'type': 'unmark',
+                        'type': 'remove-tag',
                         'tags': ['tagTestKey']
                     }
                 ]

@@ -150,9 +150,8 @@ class TagDelayedAction(tags.TagDelayedAction):
 
 
 @env_actions.register('tag')
-@env_actions.register('mark')
 class Tag(tags.Tag):
-    """Mark/tag an ElasticBeanstalk Environment with a key/value
+    """Tag an ElasticBeanstalk Environment with a key/value
 
     Note that this will cause an update to the environment to deploy the tag
     changes to all resources.
@@ -187,7 +186,6 @@ class Tag(tags.Tag):
 
 
 @env_actions.register('remove-tag')
-@env_actions.register('unmark')
 class RemoveTag(tags.RemoveTag):
     """Removes a tag or set of tags from ElasticBeanstalk Environments
 
@@ -204,7 +202,7 @@ class RemoveTag(tags.RemoveTag):
                 filters:
                   - "tag:ExpiredTag": present
                 actions:
-                  - type: unmark
+                  - type: remove-tag
                     tags: ["ExpiredTag"]
     """
 
