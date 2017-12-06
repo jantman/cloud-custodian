@@ -21,7 +21,7 @@ from c7n import utils
 from c7n import tags
 from c7n.utils import get_retry, local_session, type_schema
 from c7n.actions import ActionRegistry, BaseAction
-from c7n.filters import FilterRegistry, AgeFilter, OPERATORS
+from c7n.filters import FilterRegistry
 
 log = logging.getLogger('custodian.elasticbeanstalk')
 
