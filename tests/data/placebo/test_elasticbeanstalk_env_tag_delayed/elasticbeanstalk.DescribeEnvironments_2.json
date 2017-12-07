@@ -4,11 +4,11 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "0cc29810-d9ef-11e7-b124-679fa4c6ba3f", 
+            "RequestId": "30e2a421-d9ef-11e7-9642-257b728ba0a6", 
             "HTTPHeaders": {
-                "date": "Tue, 05 Dec 2017 19:03:59 GMT", 
-                "x-amzn-requestid": "0cc29810-d9ef-11e7-b124-679fa4c6ba3f", 
-                "content-length": "1637", 
+                "date": "Tue, 05 Dec 2017 19:04:59 GMT", 
+                "x-amzn-requestid": "30e2a421-d9ef-11e7-9642-257b728ba0a6", 
+                "content-length": "1636", 
                 "content-type": "text/xml", 
                 "connection": "keep-alive"
             }
@@ -18,7 +18,7 @@
                 "ApplicationName": "re-jenkins", 
                 "EnvironmentName": "c7n-eb-tag-test-inactive", 
                 "VersionLabel": "app-477e-170601_115505", 
-                "Status": "Updating", 
+                "Status": "Ready", 
                 "EnvironmentArn": "arn:aws:elasticbeanstalk:us-east-1:012345678901:environment/re-jenkins/c7n-eb-tag-test-inactive", 
                 "EnvironmentLinks": [], 
                 "PlatformArn": "arn:aws:elasticbeanstalk:us-east-1::platform/Docker running on 64bit Amazon Linux/2.8.0", 
@@ -26,22 +26,22 @@
                 "SolutionStackName": "64bit Amazon Linux 2017.09 v2.8.0 running Docker 17.06.2-ce", 
                 "EnvironmentId": "e-pmpgbxpgsc", 
                 "CNAME": "c7n-eb-tag-test-inactive.us-east-1.elasticbeanstalk.com", 
-                "AbortableOperationInProgress": true, 
+                "AbortableOperationInProgress": false, 
                 "Tier": {
                     "Version": " ", 
                     "Type": "Standard", 
                     "Name": "WebServer"
                 }, 
-                "Health": "Grey", 
+                "Health": "Green", 
                 "DateUpdated": {
                     "hour": 19, 
                     "__class__": "datetime", 
                     "month": 12, 
-                    "second": 55, 
-                    "microsecond": 65000, 
+                    "second": 58, 
+                    "microsecond": 721000, 
                     "year": 2017, 
                     "day": 5, 
-                    "minute": 3
+                    "minute": 4
                 }, 
                 "DateCreated": {
                     "hour": 18, 
