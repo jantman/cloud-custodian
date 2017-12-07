@@ -91,10 +91,10 @@ def _eb_env_tags(envs, session_factory, executor_factory, retry):
                 ResourceArn=eb_env['EnvironmentArn']
             )['ResourceTags']
         except ClientError as e:
-            if e.response['Error']['Code'] == 'ResourceNotFoundException':
+            if e.response['Error']['Code'] != 'ResourceNotFoundException':
                 log.warning(
-                    "Exception getting elasticbeanstalk-environment tags\n %s",
-                    e
+                    "Exception getting elasticbeanstalk-environment tags for "
+                    "environment name: %s\n %s", eb_env['EnvironmentName'], e
                 )
             return None
         eb_env['Tags'] = tag_list
