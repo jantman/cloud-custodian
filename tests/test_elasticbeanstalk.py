@@ -146,16 +146,18 @@ class TestEBEnvTagging(EbEnvBaseTest):
             },
             session_factory=factory
         )
-        with mock_datetime_now(date_parse('2017-11-10'), datetime):
+        if self.recording:
             resources = p.run()
+        else:
+            with mock_datetime_now(date_parse('2017-11-10'), datetime):
+                resources = p.run()
         self.assertEqual(len(resources), 1)
         self.assertEqual(resources[0]['EnvironmentName'], envname)
-        # Note that changing tags on an EB Env performs an update to the
-        # environment, which can take 60+ seconds. Uncomment sleeps to
-        # record test data.
-        # sleep(4)
+        if self.recording:
+            sleep(4)
         while self.query_env_status(factory(), envname) != 'Ready':
-            # sleep(30)
+            if self.recording:
+                sleep(30)
             pass
         self.assertEqual(
             self.env_tags_dict(factory(), envarn).get('c7n-eb-tag-test'),
@@ -191,16 +193,18 @@ class TestEBEnvTagging(EbEnvBaseTest):
             },
             session_factory=factory
         )
-        with mock_datetime_now(date_parse('2017-11-10'), datetime):
+        if self.recording:
             resources = p.run()
+        else:
+            with mock_datetime_now(date_parse('2017-11-10'), datetime):
+                resources = p.run()
         self.assertEqual(len(resources), 1)
         self.assertEqual(resources[0]['EnvironmentName'], envname)
-        # Note that changing tags on an EB Env performs an update to the
-        # environment, which can take 60+ seconds. Uncomment sleeps to
-        # record test data.
-        # sleep(5)
+        if self.recording:
+            sleep(5)
         while self.query_env_status(factory(), envname) != 'Ready':
-            # sleep(30)
+            if self.recording:
+                sleep(30)
             pass
         self.assertEqual(
             self.env_tags_dict(factory(), envarn).get('tagTestKey'),
@@ -235,16 +239,18 @@ class TestEBEnvTagging(EbEnvBaseTest):
             },
             session_factory=factory
         )
-        with mock_datetime_now(date_parse('2017-11-10'), datetime):
+        if self.recording:
             resources = p.run()
+        else:
+            with mock_datetime_now(date_parse('2017-11-10'), datetime):
+                resources = p.run()
         self.assertEqual(len(resources), 1)
         self.assertEqual(resources[0]['EnvironmentName'], envname)
-        # Note that changing tags on an EB Env performs an update to the
-        # environment, which can take 60+ seconds. Uncomment sleeps to
-        # record test data.
-        # sleep(5)
+        if self.recording:
+            sleep(5)
         while self.query_env_status(factory(), envname) != 'Ready':
-            # sleep(30)
+            if self.recording:
+                sleep(30)
             pass
         self.assertIsNone(
             self.env_tags_dict(factory(), envarn).get('tagTestKey')
