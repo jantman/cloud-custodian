@@ -37,6 +37,10 @@ from c7n.utils import (
 from botocore.exceptions import ClientError
 from c7n.resources.shield import IsShieldProtected, SetShieldProtection
 
+# TODO: remove after testing
+import logging
+logger = logging.getLogger(__name__)
+
 
 @resources.register('vpc')
 class Vpc(query.QueryResourceManager):
@@ -877,11 +881,13 @@ class SGPermission(Filter):
         return self
 
     def process(self, resources, event=None):
+
         self.vfilters = []
         fattrs = list(sorted(self.perm_attrs.intersection(self.data.keys())))
         self.ports = 'Ports' in self.data and self.data['Ports'] or ()
         self.only_ports = (
             'OnlyPorts' in self.data and self.data['OnlyPorts'] or ())
+
         for f in fattrs:
             fv = self.data.get(f)
             if isinstance(fv, dict):
@@ -894,19 +900,28 @@ class SGPermission(Filter):
         return super(SGPermission, self).process(resources, event)
 
     def process_ports(self, perm):
+
         found = None
+        logger.warning('process_ports perm=%s', perm)
         if 'FromPort' in perm and 'ToPort' in perm:
+
             for port in self.ports:
                 if port >= perm['FromPort'] and port <= perm['ToPort']:
+                    logger.warning('Found based on port %s', port)
                     found = True
                     break
                 found = False
             only_found = False
+
             for port in self.only_ports:
+
                 if port == perm['FromPort'] and port == perm['ToPort']:
+                    logger.warning('Found port based on only_ports %s', port)
                     only_found = True
             if self.only_ports and not only_found:
+                logger.warning('only_ports and not only_found')
                 found = found is None or found and True or False
+            logger.warning("FOUND: %s", found)
         return found
 
     def _process_cidr(self, cidr_key, cidr_type, range_type, perm):
@@ -983,6 +998,7 @@ class SGPermission(Filter):
         matched = []
         sg_id = resource['GroupId']
         match_op = self.data.get('match-operator', 'and') == 'and' and all or any
+
         for perm in self.expand_permissions(resource[self.ip_permissions_key]):
             perm_matches = {}
             for idx, f in enumerate(self.vfilters):
@@ -996,10 +1012,14 @@ class SGPermission(Filter):
             # account for one python behavior any([]) == False, all([]) == True
             if match_op == all and not perm_match_values:
                 continue
-
+            logger.warning("PERM: %s", perm)
+            logger.warning("PERM MATCHES: %s", perm_matches)
+            logger.warning("PERM_MATCH_VALUES: %s", perm_match_values)
             match = match_op(perm_match_values)
+            logger.warning("MATCH: %s", match)
             if match:
                 matched.append(perm)
+
 
         if matched:
             resource['Matched%s' % self.ip_permissions_key] = matched
@@ -1099,8 +1119,12 @@ class RemovePermissions(BaseAction):
         i_perms = self.data.get('ingress', 'matched')
         e_perms = self.data.get('egress', 'matched')
 
+
         client = local_session(self.manager.session_factory).client('ec2')
+        logger.warning("RESOURCES: %s", resources)
+
         for r in resources:
+
             for label, perms in [('ingress', i_perms), ('egress', e_perms)]:
                 if perms == 'matched':
                     key = 'MatchedIpPermissions%s' % (
@@ -1117,6 +1141,11 @@ class RemovePermissions(BaseAction):
                 if not groups:
                     continue
                 method = getattr(client, 'revoke_security_group_%s' % label)
+                logger.warning(
+                    "CALL revoke_security_group_%s("
+                    "GroupId=%s, IpPermissions=%s)",
+                    label, r['GroupId'], groups
+                )
                 method(GroupId=r['GroupId'], IpPermissions=groups)
 
 
