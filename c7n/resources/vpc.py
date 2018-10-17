@@ -1020,7 +1020,6 @@ class SGPermission(Filter):
             if match:
                 matched.append(perm)
 
-
         if matched:
             resource['Matched%s' % self.ip_permissions_key] = matched
             return True
@@ -1118,27 +1117,31 @@ class RemovePermissions(BaseAction):
     def process(self, resources):
         i_perms = self.data.get('ingress', 'matched')
         e_perms = self.data.get('egress', 'matched')
-
+        logger.warning('Ingress permissions to remove: %s', i_perms)
 
         client = local_session(self.manager.session_factory).client('ec2')
-        logger.warning("RESOURCES: %s", resources)
 
         for r in resources:
-
             for label, perms in [('ingress', i_perms), ('egress', e_perms)]:
+                logger.warning('loop label=%s perms=%s', label, perms)
                 if perms == 'matched':
                     key = 'MatchedIpPermissions%s' % (
                         label == 'egress' and 'Egress' or '')
                     groups = r.get(key, ())
+                    logger.warning('key=%s groups=%s', key, groups)
                 elif perms == 'all':
                     key = 'IpPermissions%s' % (
                         label == 'egress' and 'Egress' or '')
+                    logger.warning('perms==all key=%s groups=%s', key, groups)
                     groups = r.get(key, ())
                 elif isinstance(perms, list):
+                    logger.warning('perms is list; setting groups to %s', perms)
                     groups = perms
                 else:
+                    logger.warning('else/continue')
                     continue
                 if not groups:
+                    logger.warning('NOT groups')
                     continue
                 method = getattr(client, 'revoke_security_group_%s' % label)
                 logger.warning(
