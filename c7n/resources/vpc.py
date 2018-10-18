@@ -911,16 +911,18 @@ class SGPermission(Filter):
                     found = True
                     break
                 found = False
+
             only_found = False
-
             for port in self.only_ports:
-
                 if port == perm['FromPort'] and port == perm['ToPort']:
                     logger.warning('Found port based on only_ports %s', port)
                     only_found = True
             if self.only_ports and not only_found:
                 logger.warning('only_ports and not only_found')
                 found = found is None or found and True or False
+            if self.only_ports and only_found:
+                logger.warning('only_ports AND only_found; set found to False')
+                found = False
             logger.warning("FOUND: %s", found)
         return found
 
