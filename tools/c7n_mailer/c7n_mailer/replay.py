@@ -58,12 +58,12 @@ class MailerTester(object):
                 self.data, self.data['resources'], ['foo@example.com']
             )
             logger.info('Send mail with subject: "%s"', mime['Subject'])
-            print(mime.get_payload())
+            print(mime.get_payload(None, True))
             return
         if dry_run:
             for to_addrs, mimetext_msg in addrs_to_msgs.items():
-                print('-> SEND MESSAGE TO: %s' % to_addrs)
-                print(mimetext_msg)
+                print('-> SEND MESSAGE TO: %s' % '; '.join(to_addrs))
+                print(mimetext_msg.get_payload(None, True))
             return
         # else actually send the message...
         for to_addrs, mimetext_msg in addrs_to_msgs.items():
