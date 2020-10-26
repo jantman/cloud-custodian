@@ -41,6 +41,9 @@ CONFIG_SCHEMA = {
         'queue_url': {'type': 'string'},
         'endpoint_url': {'type': 'string'},
         'from_address': {'type': 'string'},
+        'additional_email_headers': {
+            'type': 'array', 'items': {'type': 'string'}
+        },
         'contact_tags': {'type': 'array', 'items': {'type': 'string'}},
         'org_domain': {'type': 'string'},
 
