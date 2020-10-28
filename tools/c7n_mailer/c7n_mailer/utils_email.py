@@ -80,7 +80,10 @@ def priority_header_is_valid(priority_header, logger):
         return False
 
 
-def set_mimetext_headers(message, subject, from_addr, to_addrs, cc_addrs, additional_headers, priority, logger):
+def set_mimetext_headers(
+    message, subject, from_addr, to_addrs, cc_addrs, additional_headers,
+    priority, logger
+):
     """Sets headers on Mimetext message"""
 
     message['Subject'] = subject
